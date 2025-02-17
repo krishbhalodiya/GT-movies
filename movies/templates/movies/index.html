@@ -1,0 +1,80 @@
+{% extends 'base.html' %}
+{% block content %}
+{% load static %}
+
+<div class="movies-container">
+  <!-- Featured Section -->
+  <div class="featured-movie">
+    <div class="featured-backdrop" {% if template_data.featured_movie %}style="background: linear-gradient(rgba(0,0,0,0.7), rgba(0,0,0,0.7)), url('{{ template_data.featured_movie.image.url }}') no-repeat center center; background-size: cover;"{% else %}style="background: linear-gradient(rgba(0,0,0,0.7), rgba(0,0,0,0.7));"{% endif %}>
+      <div class="featured-content">
+        {% if template_data.featured_movie %}
+          <h1>{{ template_data.featured_movie.name }}</h1>
+        {% else %}
+          <h1>Discover Amazing Movies</h1>
+          <p class="lead mb-4">Browse our collection of premium titles</p>
+        {% endif %}
+        
+        <!-- Search Form -->
+        <div class="search-section mt-4">
+          <form class="search-form" method="get" action="{% url 'movies.index' %}">
+            <div class="input-group">
+              <input type="text" name="search" class="form-control search-input" 
+                     placeholder="Search movies..." value="{{ request.GET.search }}">
+              <button class="btn btn-primary" type="submit">
+                <i class="fas fa-search"></i> Search
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Movies Grid -->
+  <div class="container">
+    {% if template_data.movies %}
+      <div class="movies-grid">
+        {% for movie in template_data.movies %}
+        <div class="movie-card">
+          <div class="movie-image">
+            <img src="{{ movie.image.url }}" alt="{{ movie.name }}">
+            <div class="movie-overlay">
+              <div class="movie-details">
+                <h3 class="movie-title">{{ movie.name }}</h3>
+                <p class="movie-description">{{ movie.description|truncatewords:20 }}</p>
+                <p class="movie-price">${{ movie.price }}</p>
+                {% if user.is_authenticated %}
+                  <form method="post" action="{% url 'cart.add' id=movie.id %}">
+                    {% csrf_token %}
+                    <input type="hidden" name="quantity" value="1">
+                    <button type="submit" class="btn btn-primary mb-2">
+                      <i class="fas fa-cart-plus"></i> Add to Cart
+                    </button>
+                  </form>
+                {% endif %}
+                <a href="{% url 'movies.show' id=movie.id %}" class="btn btn-outline-light">
+                  <i class="fas fa-info-circle"></i> Details
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+        {% endfor %}
+      </div>
+    {% else %}
+      <div class="text-center text-white py-5">
+        <i class="fas fa-film fa-4x mb-3"></i>
+        <h3>No Movies Found</h3>
+        {% if request.GET.search %}
+          <p>No results found for "{{ request.GET.search }}"</p>
+          <a href="{% url 'movies.index' %}" class="btn btn-primary mt-3">
+            <i class="fas fa-arrow-left"></i> Back to All Movies
+          </a>
+        {% else %}
+          <p>Check back later for new movies!</p>
+        {% endif %}
+      </div>
+    {% endif %}
+  </div>
+</div>
+{% endblock %}

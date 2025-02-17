@@ -1,0 +1,224 @@
+{% extends 'base.html' %}
+{% block content %}
+<style>
+  /* Google Fonts: Import a modern font for a fresh look */
+  @import url('https://fonts.googleapis.com/css2?family=Rubik:wght@400;600;800&display=swap');
+
+  body {
+    font-family: 'Rubik', sans-serif;
+    background-color: #0f0f10;
+    margin: 0;
+    padding: 0;
+    color: #fff;
+    overflow-x: hidden;
+  }
+
+  /* ================= HERO SECTION ================= */
+  .hero-section {
+    position: relative;
+    height: 90vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    overflow: hidden;
+  }
+
+  /* ===== Animated background (slow zoom) ===== */
+  .hero-section::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(
+        rgba(0, 0, 0, 0.5), 
+        rgba(20, 20, 20, 0.8)
+      ),
+      url('https://source.unsplash.com/1600x900/?movie_store') center/cover no-repeat;
+    z-index: -1;
+    animation: slowZoom 20s ease-in-out infinite alternate;
+  }
+
+  @keyframes slowZoom {
+    0% {
+      transform: scale(1);
+    }
+    100% {
+      transform: scale(1.1);
+    }
+  }
+
+  .hero-title {
+    font-size: 4rem;
+    font-weight: 800;
+    margin: 0 20px;
+    animation: fadeInDown 1.5s ease forwards;
+  }
+
+  .cta-buttons {
+    margin-top: 30px;
+    animation: fadeInUp 1.5s ease 0.8s forwards;
+    opacity: 0;
+  }
+  .cta-buttons .btn {
+    margin: 10px;
+    padding: 14px 30px;
+    font-size: 1.2rem;
+    border-radius: 30px;
+    transition: transform 0.3s, background-color 0.3s;
+    opacity: 0.9;
+  }
+  .btn-primary {
+    background-color: #E50914;
+    border: none;
+    color: #fff;
+  }
+  .btn-secondary {
+    background-color: #333;
+    border: none;
+    color: #fff;
+  }
+  .btn-primary:hover {
+    transform: scale(1.1);
+    background-color: #f40612;
+  }
+  .btn-secondary:hover {
+    transform: scale(1.1);
+    background-color: #444;
+  }
+
+  /* Keyframes for Animations */
+  @keyframes fadeInDown {
+    0% {
+      opacity: 0;
+      transform: translateY(-20px);
+    }
+    100% {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+  @keyframes fadeInUp {
+    0% {
+      opacity: 0;
+      transform: translateY(20px);
+    }
+    100% {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  /* ================= Wave Divider ================= */
+  .wave-divider {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    line-height: 0;
+    z-index: 0;
+  }
+  .wave-divider svg {
+    display: block;
+    width: 100%;
+    height: 60px;
+  }
+
+  /* ================= MOVIE GALLERY ================= */
+  .movie-gallery {
+    padding: 60px 5%;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+    gap: 30px;
+    background-color: #141414;
+    position: relative;
+    z-index: 1;
+  }
+  .movie-card {
+    background: #1f1f1f;
+    border-radius: 15px;
+    box-shadow: 0 6px 20px rgba(0,0,0,0.5);
+    overflow: hidden;
+    transition: transform 0.4s, box-shadow 0.4s;
+    opacity: 0;
+    animation: fadeInUp 1s forwards;
+  }
+  /* Staggered animation for movie cards */
+  .movie-card:nth-child(even) {
+    animation-delay: 0.2s;
+  }
+  .movie-card:hover {
+    transform: scale(1.03);
+    box-shadow: 0 10px 25px rgba(0,0,0,0.7);
+  }
+  .movie-card img {
+    width: 100%;
+    height: 320px;
+    object-fit: cover;
+    display: block;
+  }
+  .movie-card-content {
+    padding: 15px;
+  }
+  .movie-card h4 {
+    margin: 10px 0 5px 0;
+    font-weight: 600;
+    font-size: 1.2rem;
+  }
+  .movie-card p {
+    color: #bbb;
+    margin-bottom: 10px;
+  }
+  .movie-card a.btn {
+    border-radius: 25px;
+  }
+
+  /* Responsive */
+  @media (max-width: 768px) {
+    .hero-title {
+      font-size: 2.8rem;
+    }
+    .btn {
+      font-size: 1rem;
+      padding: 10px 20px;
+    }
+    .movie-card img {
+      height: 250px;
+    }
+  }
+</style>
+
+<!-- HERO SECTION -->
+<div class="hero-section">
+  <div>
+    <h1 class="hero-title">Explore Your Next Favorite Movie</h1>
+    <div class="cta-buttons" style="opacity:0;">
+      <a href="{% url 'movies.index' %}" class="btn btn-primary">Browse Movies</a>
+      <a href="{% url 'accounts.signup' %}" class="btn btn-secondary">Join Now</a>
+    </div>
+  </div>
+  <!-- Wave Divider -->
+  <div class="wave-divider">
+    <svg data-name="Layer 1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 120" preserveAspectRatio="none">
+      <path d="M985.66,84.12c-42.83,4.09-83.77,6.51-123.63,5.78-78.07-1.32-153.5-13.09-231.75-14.77C508.51,72,411,100,308,108.38c-54.22,4.3-108.42-.46-162.62-7.54C97.35,93.52,48.68,85.14,0,76.61V0H1200V120C1100.28,102.45,1043.66,79.4,985.66,84.12Z" fill="#141414"></path>
+    </svg>
+  </div>
+</div>
+
+<!-- MOVIE GALLERY -->
+<h2 class="featured-subtitle" style="text-align:center; margin:40px 0; font-size:2.2rem; font-weight:700; text-transform:uppercase; letter-spacing:1px;">Trending Movies</h2>
+<div class="movie-gallery">
+  {% for movie in template_data.movies %}
+    <div class="movie-card">
+      <img src="{{ movie.image.url }}" alt="{{ movie.name }}">
+      <div class="movie-card-content">
+        <h4>{{ movie.name }}</h4>
+        <p>${{ movie.price }}</p>
+        <a href="{% url 'movies.show' movie.id %}" class="btn btn-sm btn-outline-light">View Details</a>
+      </div>
+    </div>
+  {% endfor %}
+</div>
+{% endblock content %}
